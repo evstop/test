@@ -4,6 +4,69 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width = device-width, initial-scale = 1.0" />  
+    <script>
+        //Lauschen auf beforeinstallprompt
+        let installPrompt = null;
+        const installButton = document.querySelector("#install");
+
+        window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        installPrompt = event;
+        installButton.removeAttribute("hidden");
+        });
+
+        //Auslösen des Installations-Prompts
+        installButton.addEventListener("click", async () => {
+        if (!installPrompt) {
+            return;
+        }
+        const result = await installPrompt.prompt();
+        console.log(`Install prompt was: ${result.outcome}`);
+        disableInAppInstallPrompt();
+        });
+
+        function disableInAppInstallPrompt() {
+        installPrompt = null;
+        installButton.setAttribute("hidden", "");
+        }
+
+        //Auslösen des Installations-Prompts
+        installButton.addEventListener("click", async () => {
+        if (!installPrompt) {
+            return;
+        }
+        const result = await installPrompt.prompt();
+        console.log(`Install prompt was: ${result.outcome}`);
+        disableInAppInstallPrompt();
+        });
+
+        function disableInAppInstallPrompt() {
+        installPrompt = null;
+        installButton.setAttribute("hidden", "");
+        }
+
+        //Reagieren auf die App-Installation
+        window.addEventListener("appinstalled", () => {
+        disableInAppInstallPrompt();
+        });
+
+        function disableInAppInstallPrompt() {
+        installPrompt = null;
+        installButton.setAttribute("hidden", "");
+        }
+
+        //Reagieren auf installierte plattform-spezifische Apps
+        const relatedApps = await navigator.getInstalledRelatedApps();
+
+        // Search for a specific installed platform-specific app
+        const psApp = relatedApps.find((app) => app.id === "com.example.myapp");
+
+        if (psApp) {
+        // Update UI as appropriate
+        }
+
+    </script>
+
 	<title>Beispielseite</title>
 	<meta name="description" content="Beschreibungstext">
 	<!--<link rel="shortcut icon" href="favicon.ico" />-->
@@ -16,6 +79,7 @@
 <!-- header -->
 <header>
 	Kopfbereich
+    <button id="install" hidden>Install</button>
 </header>
    
 <!-- navigation -->
